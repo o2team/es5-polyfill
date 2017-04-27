@@ -1,0 +1,23 @@
+{
+  "name": "o2-polyfill",
+  "version": "0.0.1",
+  "description": "JavaScript Polyfill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luckyadam/polyfill.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "Polyfill"
+  ],
+  "author": "luckyadam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luckyadam/polyfill/issues"
+  },
+  "homepage": "https://github.com/luckyadam/polyfill#readme"
+}
