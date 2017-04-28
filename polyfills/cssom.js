@@ -6,9 +6,11 @@
 //----------------------------------------------------------------------
 
 // Fix for IE8-'s Element.getBoundingClientRect()
-if ('TextRectangle' in window && !('width' in window.TextRectangle.prototype)) {
-  Object.defineProperties(window.TextRectangle.prototype, {
-    'width': { get () { return this.right - this.left } },
-    'height': { get () { return this.bottom - this.top } }
-  })
-}
+(function (global, undefined) {
+  if ('TextRectangle' in global && !('width' in global.TextRectangle.prototype)) {
+    Object.defineProperties(global.TextRectangle.prototype, {
+      'width': { get () { return this.right - this.left } },
+      'height': { get () { return this.bottom - this.top } }
+    })
+  }
+})(window, void 0)

@@ -1,3 +1,7 @@
+/**
+ * polyfill for Object
+ */
+
 // from https://github.com/es-shims/es5-shim/blob/master/es5-sham.js
 
 var prototypeOfObject = Object.prototype
