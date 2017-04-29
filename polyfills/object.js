@@ -29,7 +29,7 @@
   }
 
   if (!Object.getPrototypeOf) {
-    Object.getPrototypeOf = function getPrototypeOf (object) {
+    Object.getPrototypeOf = function getPrototypeOf(object) {
       var proto = object.__proto__
       if (proto || proto === null) {
         return proto
@@ -45,7 +45,7 @@
   }
 
   if (!Object.keys) {
-    Object.keys = function keys (object) {
+    Object.keys = function keys(object) {
       if (object !== Object(object)) { throw TypeError('Object.keys called on non-object: ' + object); }
       var keys = [];
       for (var p in object) {
@@ -58,7 +58,7 @@
   }
 
   if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = function getOwnPropertyNames (object) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
       if (object !== Object(object)) {
         throw TypeError('Object.getOwnPropertyNames called on non-object: ' + object)
       }
@@ -66,7 +66,7 @@
     }
   }
 
-  var doesGetOwnPropertyDescriptorWork = function doesGetOwnPropertyDescriptorWork (object) {
+  var doesGetOwnPropertyDescriptorWork = function doesGetOwnPropertyDescriptorWork(object) {
     try {
       object.sentinel = 0
       return Object.getOwnPropertyDescriptor(object, 'sentinel').value === 0
@@ -79,14 +79,14 @@
   if (Object.defineProperty) {
     var getOwnPropertyDescriptorWorksOnObject = doesGetOwnPropertyDescriptorWork({})
     var getOwnPropertyDescriptorWorksOnDom = typeof document === 'undefined' ||
-          doesGetOwnPropertyDescriptorWork(document.createElement('div'))
+      doesGetOwnPropertyDescriptorWork(document.createElement('div'))
     if (!getOwnPropertyDescriptorWorksOnDom || !getOwnPropertyDescriptorWorksOnObject) {
       getOwnPropertyDescriptorFallback = Object.getOwnPropertyDescriptor
     }
   }
   if (!Object.getOwnPropertyDescriptor || getOwnPropertyDescriptorFallback) {
     var ERR_NON_OBJECT = 'Object.getOwnPropertyDescriptor called on a non-object: '
-    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor (object, property) {
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
       if (isPrimitive(object)) {
         throw new TypeError(ERR_NON_OBJECT + object)
       }
@@ -132,7 +132,7 @@
     }
   }
 
-  var doesDefinePropertyWork = function doesDefinePropertyWork (object) {
+  var doesDefinePropertyWork = function doesDefinePropertyWork(object) {
     try {
       Object.defineProperty(object, 'sentinel', {})
       return 'sentinel' in object
@@ -155,7 +155,7 @@
     var ERR_NON_OBJECT_DESCRIPTOR = 'Property description must be an object: '
     var ERR_NON_OBJECT_TARGET = 'Object.defineProperty called on non-object: '
     var ERR_ACCESSORS_NOT_SUPPORTED = 'getters & setters can not be defined on this javascript engine'
-    Object.defineProperty = function defineProperty (object, property, descriptor) {
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
       if (isPrimitive(object)) {
         throw new TypeError(ERR_NON_OBJECT_TARGET + object)
       }
@@ -197,7 +197,7 @@
   }
 
   if (!Object.defineProperties || definePropertiesFallback) {
-    Object.defineProperties = function defineProperties (object, properties) {
+    Object.defineProperties = function defineProperties(object, properties) {
       if (definePropertiesFallback) {
         try {
           return definePropertiesFallback.call(Object, object, properties)
@@ -216,9 +216,9 @@
   }
 
   if (!Object.create) {
-    Object.create = function create (prototype, properties) {
+    Object.create = function create(prototype, properties) {
       var object
-      var Type = function Type () {}
+      var Type = function Type() { }
       Type.prototype = prototype
       object = new Type()
       if (prototype) {
@@ -232,5 +232,79 @@
       }
       return object
     }
+  }
+
+  if (!Object.seal) {
+    Object.seal = function seal(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.seal can only be called on Objects.')
+      }
+      return object
+    }
+  }
+
+  if (!Object.freeze) {
+    Object.freeze = function freeze(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.freeze can only be called on Objects.')
+      }
+      return object
+    }
+  }
+
+  try {
+    Object.freeze(function () { })
+  } catch (exception) {
+    Object.freeze = (function (freezeObject) {
+      return function freeze(object) {
+        if (typeof object === 'function') {
+          return object
+        }
+        return freezeObject(object)
+      }
+    })(Object.freeze)
+  }
+
+  if (!Object.preventExtensions) {
+    Object.preventExtensions = function preventExtensions(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.preventExtensions can only be called on Objects.')
+      }
+      return object
+    }
+  }
+
+  if (!Object.isSealed) {
+    Object.isSealed = function isSealed(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.isSealed can only be called on Objects.');
+      }
+      return false;
+    };
+  }
+
+  if (!Object.isFrozen) {
+    Object.isFrozen = function isFrozen(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.isFrozen can only be called on Objects.');
+      }
+      return false;
+    };
+  }
+
+  if (!Object.isExtensible) {
+    Object.isExtensible = function isExtensible(object) {
+      if (Object(object) !== object) {
+        throw new TypeError('Object.isExtensible can only be called on Objects.');
+      }
+      var name = '';
+      while (owns(object, name)) {
+        name += '?';
+      }
+      object[name] = true;
+      var returnValue = owns(object, name);
+      delete object[name];
+      return returnValue;
+    };
   }
 })()
