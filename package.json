@@ -1,6 +1,6 @@
 {
   "name": "o2-polyfill",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "JavaScript Polyfill",
   "main": "dist/polyfill.js",
   "scripts": {
