@@ -9,8 +9,8 @@
 (function (global) {
   if ('TextRectangle' in global && !('width' in global.TextRectangle.prototype)) {
     Object.defineProperties(global.TextRectangle.prototype, {
-      'width': { get () { return this.right - this.left } },
-      'height': { get () { return this.bottom - this.top } }
+      'width': { get: function () { return this.right - this.left } },
+      'height': { get: function () { return this.bottom - this.top } }
     })
   }
 })(window)

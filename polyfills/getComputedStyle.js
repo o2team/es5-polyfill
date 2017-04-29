@@ -57,14 +57,14 @@
 
   CSSStyleDeclaration.prototype = {
     constructor: CSSStyleDeclaration,
-    getPropertyPriority () { },
-    getPropertyValue (prop) {
+    getPropertyPriority: function () { },
+    getPropertyValue: function (prop) {
       return this[prop] || ''
     },
-    item () { },
-    removeProperty () { },
-    setProperty () { },
-    getPropertyCSSValue () { }
+    item: function () { },
+    removeProperty: function () { },
+    setProperty: function () { },
+    getPropertyCSSValue: function () { }
   }
   global.getComputedStyle = function (node) {
     return new CSSStyleDeclaration(node)
