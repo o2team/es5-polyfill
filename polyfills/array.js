@@ -189,16 +189,11 @@ if (!Array.prototype.fill) {
       Math.min(relativeStart, len)
 
     var end = arguments[2]
-    var relativeEnd = end === undefined ?
-      len : 
-      end >> 0
-
-    var final = relativeEnd < 0 ?
-      Math.max(len + relativeEnd, 0) :
-      Math.min(relativeEnd, len)
-    while(k < final) {
-        O[k] = value
-        k++
+    var relativeEnd = end === undefined ? len : end >> 0
+    var final = relativeEnd < 0 ? Math.max(len + relativeEnd, 0) : Math.min(relativeEnd, len)
+    while (k < final) {
+      O[k] = value
+      k++
     }
 
     return O
@@ -236,7 +231,7 @@ if (!Array.prototype.find) {
     if (this === void 0 || this === null) {
       throw new TypeError('Array.prototype.find called on null or undefined')
     }
-    if (Object.prototype.toString.call(callback) != '[object Function]') {
+    if (Object.prototype.toString.call(predicate) != '[object Function]') {
       throw new TypeError(predicate + ' must be a function')
     }
     var list = Object(this)
@@ -259,7 +254,7 @@ if (!Array.prototype.findIndex) {
     if (this === void 0 || this === null) {
       throw new TypeError('Array.prototype.findIndex called on null or undefined')
     }
-    if (Object.prototype.toString.call(callback) != '[object Function]') {
+    if (Object.prototype.toString.call(predicate) != '[object Function]') {
       throw new TypeError(predicate + ' must be a function')
     }
     var list = Object(this)
@@ -377,7 +372,7 @@ if (!Array.prototype.map) {
     }
     A = new Array(len)
     k = 0
-    while(k < len) {
+    while (k < len) {
       var kValue, mappedValue
       if (k in O) {
         kValue = O[k]
@@ -463,7 +458,7 @@ if (!Array.prototype.some) {
     var len = t.length >>> 0
     var thisArg = arguments.length >= 2 ? arguments[1] : void 0
     for (var i = 0; i < len; i++) {
-      if (i in t && fun.call(thisArg, t[i], i, t)) {
+      if (i in t && callback.call(thisArg, t[i], i, t)) {
         return true
       }
     }

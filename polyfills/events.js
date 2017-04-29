@@ -3,55 +3,56 @@
  */
 
 // from https://github.com/Financial-Times/polyfill-service/blob/master/polyfills/Event/polyfill.js
-(function (global, undefined) {
+(function (global) {
   if (('Event' in global) && typeof global.Event === 'function') {
     return
   }
   var unlistenableWindowEvents = {
-		click: 1,
-		dblclick: 1,
-		keyup: 1,
-		keypress: 1,
-		keydown: 1,
-		mousedown: 1,
-		mouseup: 1,
-		mousemove: 1,
-		mouseover: 1,
-		mouseenter: 1,
-		mouseleave: 1,
-		mouseout: 1,
-		storage: 1,
-		storagecommit: 1,
-		textinput: 1
-	}
+    click: 1,
+    dblclick: 1,
+    keyup: 1,
+    keypress: 1,
+    keydown: 1,
+    mousedown: 1,
+    mouseup: 1,
+    mousemove: 1,
+    mouseover: 1,
+    mouseenter: 1,
+    mouseleave: 1,
+    mouseout: 1,
+    storage: 1,
+    storagecommit: 1,
+    textinput: 1
+  }
   var existingProto = (global.Event && global.Event.prototype) || null
   global.Event = Window.prototype.Event = function Event (type, eventInitDict) {
     if (!type) {
       throw new Error('Not enough arguments')
     }
+    var event
     if ('createEvent' in document) {
-      var event = document.createEvent('Event')
+      event = document.createEvent('Event')
       var bubbles = eventInitDict && eventInitDict.bubbles !== undefined ? eventInitDict.bubbles : false
       var cancelable = eventInitDict && eventInitDict.cancelable !== undefined ? eventInitDict.cancelable : false
       event.initEvent(type, bubbles, cancelable)
       return event
     }
-    var event = document.createEventObject()
+    event = document.createEventObject()
     event.type = type
     event.bubbles = eventInitDict && eventInitDict.bubbles !== undefined ? eventInitDict.bubbles : false
     event.cancelable = eventInitDict && eventInitDict.cancelable !== undefined ? eventInitDict.cancelable : false
     return event
   }
   if (existingProto) {
-		Object.defineProperty(global.Event, 'prototype', {
-			configurable: false,
-			enumerable: false,
-			writable: true,
-			value: existingProto
-		});
-	}
+    Object.defineProperty(global.Event, 'prototype', {
+      configurable: false,
+      enumerable: false,
+      writable: true,
+      value: existingProto
+    })
+  }
   if (!('createEvent' in document)) {
-    function addEventListener (type, listener, useCapture) {
+    var addEventListener = function (type, listener) {
       var element = this
       if (element === global && type in unlistenableWindowEvents) {
         throw new Error('In IE8 the event: ' + type + ' is not available on the window object.')
@@ -103,7 +104,7 @@
       element._events[type].list.push(listener)
     }
 
-    function removeEventListener (type, listener, useCapture) {
+    var removeEventListener = function (type, listener) {
       var element = this
       var index
       if (element._events && element._events[type] && element._events[type].list) {
@@ -120,7 +121,7 @@
       }
     }
 
-    function dispatchEvent (event) {
+    var dispatchEvent = function (event) {
       if (!arguments.length) {
         throw new Error('Not enough arguments')
       }
@@ -133,7 +134,7 @@
           event.cancelBubble = true
           var cancelBubbleEvent = function (event) {
             event.cancelBubble = true
-            (element || window).detachEvent('on' + type, cancelBubbleEvent)
+            ;(element || window).detachEvent('on' + type, cancelBubbleEvent)
           }
           this.attachEvent('on' + type, cancelBubbleEvent)
         }
@@ -154,7 +155,7 @@
       return true
     }
 
-    [Window, HTMLDocument, Element].forEach(function (o) {
+    void [Window, HTMLDocument, Element].forEach(function (o) {
       o.prototype.addEventListener = addEventListener
       o.prototype.removeEventListener = removeEventListener
       o.prototype.dispatchEvent = dispatchEvent
@@ -168,5 +169,5 @@
         }))
       }
     })
-  }  
-})(window, void 0)
+  }
+})(window)

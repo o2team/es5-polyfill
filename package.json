@@ -4,7 +4,13 @@
   "description": "JavaScript Polyfill",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint polyfills",
+    "test": "npm-run-all lint",
+    "clear": "rm -rf dist",
+    "transpile": "gulp",
+    "build": "npm-run-all test clear transpile",
+    "smart-release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
+    "release": "cross-env npm run smart-release"
   },
   "repository": {
     "type": "git",
@@ -19,5 +25,11 @@
   "bugs": {
     "url": "https://github.com/luckyadam/polyfill/issues"
   },
-  "homepage": "https://github.com/luckyadam/polyfill#readme"
+  "homepage": "https://github.com/luckyadam/polyfill#readme",
+  "devDependencies": {
+    "cross-env": "^4.0.0",
+    "eslint": "^3.19.0",
+    "gulp": "^3.9.1",
+    "npm-run-all": "^4.0.2"
+  }
 }

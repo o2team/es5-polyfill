@@ -2,26 +2,26 @@
  * polyfill for DOM
  */
 
-(function (global, undefined) {
-  if (!'document' in global) {
+(function (global) {
+  if (!('document' in global)) {
     return
   }
   var document = global.document
 
   // IE8- document.getElementsByClassName
-  if (!document.getElementsByClassName) {
-    function getElementsByClassName (classNames) {
-      lassNames = String(classNames).replace(/^|\s+/g, '.')
+  if (!document.getElementsByClassName && document.querySelectorAll) {
+    var getElementsByClassName = function (classNames) {
+      classNames = String(classNames).replace(/^|\s+/g, '.')
       return this.querySelectorAll(classNames)
     }
-    [HTMLDocument, Element].forEach(function (o) {
+    void [HTMLDocument, Element].forEach(function (o) {
       o.prototype.getElementsByClassName = getElementsByClassName
     })
   }
 
   // IE CustomEvent
-  if (!'CustomEvent' in global || typeof global.CustomEvent !== 'function') {
-    function CustomEvent (event, params) {
+  if (!('CustomEvent' in global) || typeof global.CustomEvent !== 'function') {
+    var CustomEvent = function (event, params) {
       params = params || { bubbles: false, cancelable: false, detail: undefined }
       var evt = document.createEvent('CustomEvent')
       evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
@@ -34,7 +34,7 @@
   // Element.matches
   // from https://developer.mozilla.org/en/docs/Web/API/Element/matches
   (function () {
-    if (!'Element' in global || Element.prototype.matches) {
+    if (!('Element' in global) || Element.prototype.matches) {
       return
     }
     var matchesVenders = ['ms', 'o', 'moz', 'webkit']
@@ -48,11 +48,11 @@
     }
     if (document.querySelectorAll) {
       Element.prototype.matches = function matches (selector) {
-        var matches = (this.document || this.ownerDocument).querySelectorAll(selector),
-            i = matches.length
+        var matches = (this.document || this.ownerDocument).querySelectorAll(selector)
+        var i = matches.length
         while (--i >= 0 && matches.item(i) !== this) {}
         return i > -1
       };
     }
   })()
-})(window, void 0)
+})(window)

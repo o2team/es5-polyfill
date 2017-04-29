@@ -3,8 +3,8 @@
  */
 
 // from https://github.com/chrisdickinson/raf/
-(function (global, undefined) {
-  if (!'requestAnimationFrame' in global) {
+(function (global) {
+  if (!('requestAnimationFrame' in global)) {
     return
   }
   var now = (function () {
@@ -65,4 +65,4 @@
       }
     }
   }
-})(window, void 0)
+})(window)

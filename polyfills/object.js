@@ -33,13 +33,14 @@
       var proto = object.__proto__
       if (proto || proto === null) {
         return proto
-      } else if (toStr(object.constructor) === '[object Function]') {
-        return object.constructor.prototype
-      } else if (object instanceof Object) {
-        return prototypeOfObject
-      } else {
-        return null
       }
+      if (toStr(object.constructor) === '[object Function]') {
+        return object.constructor.prototype
+      }
+      if (object instanceof Object) {
+        return prototypeOfObject
+      }
+      return null
     }
   }
 
@@ -221,7 +222,7 @@
       Type.prototype = prototype
       object = new Type()
       if (prototype) {
-        o.constructor = Ctor
+        object.constructor = Type
       }
       if (properties !== undefined) {
         if (properties !== Object(properties)) {

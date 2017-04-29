@@ -1,9 +1,5 @@
 module.exports = {
-  parser: 'babel-eslint',
   extends: 'eslint:recommended',
-  plugins: [
-    'react'
-  ],
   env: {
     browser: true,
     mocha: true,
@@ -12,8 +8,7 @@ module.exports = {
   },
   parserOptions: {
     ecmaFeatures: {
-      modules: true,
-      jsx: true
+      modules: true
     }
   },
   globals: {
@@ -21,8 +16,6 @@ module.exports = {
     expect: true
   },
   rules: {
-    'react/jsx-uses-react': 2,
-    'react/jsx-uses-vars': 2,
     'no-unused-vars': [1, { varsIgnorePattern: '^h$' }],
     'no-cond-assign': 1,
     'no-empty': 0,
@@ -55,8 +48,6 @@ module.exports = {
     'no-this-before-super': 2,
     'no-dupe-class-members': 2,
     'no-const-assign': 2,
-    'no-useless-concat': 2,
-    'object-shorthand': 2,
-    'prefer-arrow-callback': 2
+    'no-useless-concat': 2
   }
 }
