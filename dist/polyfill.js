@@ -69,16 +69,41 @@ if (!Function.prototype.bind) {
   }
 
   if (!Object.keys) {
-    Object.keys = function keys(object) {
-      if (object !== Object(object)) { throw TypeError('Object.keys called on non-object: ' + object); }
-      var keys = [];
-      for (var p in object) {
-        if (Object.prototype.hasOwnProperty.call(object, p)) {
-          keys.push(p);
+    Object.keys = (function() {
+      var hasOwnProperty = Object.prototype.hasOwnProperty;
+      var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString');
+      var dontEnums = [
+        'toString',
+        'toLocaleString',
+        'valueOf',
+        'hasOwnProperty',
+        'isPrototypeOf',
+        'propertyIsEnumerable',
+        'constructor'
+      ];
+      var dontEnumsLength = dontEnums.length;
+
+      return function (obj) {
+        if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+          throw new TypeError('Object.keys called on non-object');
         }
-      }
-      return keys;
-    };
+        var result = [], prop, i;
+
+        for (prop in obj) {
+          if (hasOwnProperty.call(obj, prop)) {
+            result.push(prop);
+          }
+        }
+        if (hasDontEnumBug) {
+          for (i = 0; i < dontEnumsLength; i++) {
+            if (hasOwnProperty.call(obj, dontEnums[i])) {
+              result.push(dontEnums[i]);
+            }
+          }
+        }
+        return result;
+      };
+    }());
   }
 
   if (!Object.getOwnPropertyNames) {
@@ -99,7 +124,6 @@ if (!Function.prototype.bind) {
     }
   };
   var getOwnPropertyDescriptorFallback;
-  // check whether getOwnPropertyDescriptor works if it's given. Otherwise, shim partially
   if (Object.defineProperty) {
     var getOwnPropertyDescriptorWorksOnObject = doesGetOwnPropertyDescriptorWork({});
     var getOwnPropertyDescriptorWorksOnDom = typeof document === 'undefined' ||
@@ -240,20 +264,96 @@ if (!Function.prototype.bind) {
   }
 
   if (!Object.create) {
-    Object.create = function create(prototype, properties) {
-      var object;
-      var Type = function Type() { };
-      Type.prototype = prototype;
-      object = new Type();
-      if (prototype) {
-        object.constructor = Type;
+    var createEmpty;
+    var supportsProto = !({ __proto__: null } instanceof Object);
+    /* global ActiveXObject */
+    var shouldUseActiveX = function () {
+      if (!document.domain) {
+        return false;
       }
-      if (properties !== undefined) {
-        if (properties !== Object(properties)) {
-          throw TypeError();
+      try {
+        return !!new ActiveXObject('htmlfile');
+      } catch (exception) {
+        return false;
+      }
+    };
+
+    var getEmptyViaActiveX = function () {
+      var empty;
+      var xDoc;
+      xDoc = new ActiveXObject('htmlfile');
+      var script = 'script';
+      xDoc.write('<' + script + '></' + script + '>');
+      xDoc.close();
+
+      empty = xDoc.parentWindow.Object.prototype;
+      xDoc = null;
+
+      return empty;
+    };
+
+    var getEmptyViaIFrame = function () {
+      var iframe = document.createElement('iframe');
+      var parent = document.body || document.documentElement;
+      var empty;
+
+      iframe.style.display = 'none';
+      parent.appendChild(iframe);
+      // eslint-disable-next-line no-script-url
+      iframe.src = 'javascript:';
+
+      empty = iframe.contentWindow.Object.prototype;
+      parent.removeChild(iframe);
+      iframe = null;
+
+      return empty;
+    };
+
+    /* global document */
+    if (supportsProto || typeof document === 'undefined') {
+      createEmpty = function () {
+        return { __proto__: null };
+      };
+    } else {
+      createEmpty = function () {
+        var empty = shouldUseActiveX() ? getEmptyViaActiveX() : getEmptyViaIFrame();
+
+        delete empty.constructor;
+        delete empty.hasOwnProperty;
+        delete empty.propertyIsEnumerable;
+        delete empty.isPrototypeOf;
+        delete empty.toLocaleString;
+        delete empty.toString;
+        delete empty.valueOf;
+
+        var Empty = function Empty() { };
+        Empty.prototype = empty;
+        // short-circuit future calls
+        createEmpty = function () {
+          return new Empty();
+        };
+        return new Empty();
+      };
+    }
+
+    Object.create = function create (prototype, properties) {
+      var object;
+      var Type = function () { };
+      if (prototype === null) {
+        object = createEmpty();
+      } else {
+        if (prototype !== null && isPrimitive(prototype)) {
+          throw new TypeError('Object prototype may only be an Object or null');
         }
+        Type.prototype = prototype;
+        object = new Type();
+        object.__proto__ = prototype;
+      }
+
+      if (properties !== void 0) {
         Object.defineProperties(object, properties);
       }
+
       return object;
     };
   }
@@ -1244,3 +1344,48 @@ if (!String.prototype.trim) {
     return String(this).replace(/^\s+/, '').replace(/\s+$/, '');
   };
 }
+/**
+ * Polyfill for Viewport
+ */
+
+(function (global) {
+  if ('innerWidth' in global && 'innerHeight' in global && 'pageXOffset' in global && 'pageYOffset' in global) {
+    return;
+  }
+  var doc = global.document;
+  var docEl = doc.documentElement;
+  var body = doc.body || doc.createElement('body');
+
+  function scrollX () {
+    return (docEl.scrollLeft || body.scrollLeft || 0) - (docEl.clientLeft || body.clientLeft || 0);
+  }
+
+  function scrollY () {
+    return (docEl.scrollTop || body.scrollTop || 0) - (docEl.clientTop || body.clientTop || 0);
+  }
+
+  Object.defineProperties(global, {
+    innerWidth: {
+      get: function () {
+        return docEl.clientWidth;
+      }
+    },
+    innerHeight: {
+      get: function () {
+        return docEl.clientHeight;
+      }
+    },
+    pageXOffset: {
+      get: scrollX
+    },
+    pageYOffset: {
+      get: scrollY
+    },
+    scrollX: {
+      get: scrollX
+    },
+    scrollY: {
+      get: scrollY
+    }
+  });
+})(window);
