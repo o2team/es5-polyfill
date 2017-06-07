@@ -46,7 +46,7 @@
 
   if (!Object.keys) {
     Object.keys = (function() {
-      var hasOwnProperty = Object.prototype.hasOwnProperty;
+      var hasOwnProperty = Object.prototype.hasOwnProperty
       var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString')
       var dontEnums = [
         'toString',
@@ -142,10 +142,10 @@
         }
         if (getter || setter) {
           if (getter) {
-            descriptor.get = getter;
+            descriptor.get = getter
           }
           if (setter) {
-            descriptor.set = setter;
+            descriptor.set = setter
           }
           return descriptor
         }
@@ -188,7 +188,7 @@
       }
       if (definePropertyFallback) {
         try {
-          return definePropertyFallback.call(Object, object, property, descriptor);
+          return definePropertyFallback.call(Object, object, property, descriptor)
         } catch (exception) {
         }
       }
@@ -266,7 +266,7 @@
       xDoc = null
 
       return empty
-    };
+    }
 
     var getEmptyViaIFrame = function () {
       var iframe = document.createElement('iframe')
@@ -377,34 +377,43 @@
   if (!Object.isSealed) {
     Object.isSealed = function isSealed(object) {
       if (Object(object) !== object) {
-        throw new TypeError('Object.isSealed can only be called on Objects.');
+        throw new TypeError('Object.isSealed can only be called on Objects.')
       }
-      return false;
-    };
+      return false
+    }
   }
 
   if (!Object.isFrozen) {
     Object.isFrozen = function isFrozen(object) {
       if (Object(object) !== object) {
-        throw new TypeError('Object.isFrozen can only be called on Objects.');
+        throw new TypeError('Object.isFrozen can only be called on Objects.')
       }
-      return false;
-    };
+      return false
+    }
   }
 
   if (!Object.isExtensible) {
     Object.isExtensible = function isExtensible(object) {
       if (Object(object) !== object) {
-        throw new TypeError('Object.isExtensible can only be called on Objects.');
+        throw new TypeError('Object.isExtensible can only be called on Objects.')
       }
-      var name = '';
+      var name = ''
       while (owns(object, name)) {
-        name += '?';
+        name += '?'
       }
-      object[name] = true;
-      var returnValue = owns(object, name);
-      delete object[name];
-      return returnValue;
-    };
+      object[name] = true
+      var returnValue = owns(object, name)
+      delete object[name]
+      return returnValue
+    }
+  }
+
+  if (!Object.is) {
+    Object.is = function (x, y) {
+      if (x === y) {
+        return x !== 0 || 1 / x === 1 / y
+      }
+      return x !== x && y !== y
+    }
   }
 })()
