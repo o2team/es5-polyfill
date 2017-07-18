@@ -1,7 +1,7 @@
 {
-  "name": "o2-polyfill",
-  "version": "0.0.3",
-  "description": "JavaScript Polyfill",
+  "name": "es5-polyfill",
+  "version": "0.0.1",
+  "description": "ECMAScript 5 Polyfill",
   "main": "dist/polyfill.js",
   "scripts": {
     "lint": "eslint polyfills",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luckyadam/polyfill.git"
+    "url": "git+https://github.com/o2team/es5-polyfill.git"
   },
   "keywords": [
     "JavaScript",
@@ -23,9 +23,9 @@
   "author": "luckyadam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/luckyadam/polyfill/issues"
+    "url": "https://github.com/o2team/es5-polyfill/issues"
   },
-  "homepage": "https://github.com/luckyadam/polyfill#readme",
+  "homepage": "https://github.com/o2team/es5-polyfill#readme",
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
