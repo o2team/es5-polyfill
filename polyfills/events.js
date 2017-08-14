@@ -80,8 +80,8 @@
             event.cancelImmediate = true
           }
           event.currentTarget = element
-          event.relatedTarget = event.fromElement || null
           event.target = event.target || event.srcElement || element
+          event.relatedTarget = event.fromElement ? (event.fromElement === event.target) ? event.toElement : event.fromElement : null
           event.timeStamp = new Date().getTime()
           if (event.clientX) {
             event.pageX = event.clientX + document.documentElement.scrollLeft
