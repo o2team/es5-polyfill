@@ -1,6 +1,6 @@
 {
   "name": "es5-polyfill",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ECMAScript 5 Polyfill",
   "main": "dist/polyfill.js",
   "scripts": {
@@ -12,6 +12,10 @@
     "smart-release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish",
     "release": "cross-env npm run smart-release"
   },
+  "files": [
+    "dist",
+    "polyfills"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/o2team/es5-polyfill.git"
