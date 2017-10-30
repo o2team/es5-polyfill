@@ -1,6 +1,6 @@
 {
   "name": "es5-polyfill",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ECMAScript 5 Polyfill",
   "main": "dist/polyfill.js",
   "scripts": {
