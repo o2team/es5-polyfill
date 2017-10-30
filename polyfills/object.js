@@ -206,7 +206,7 @@
         var hasGetter = 'get' in descriptor
         var hasSetter = 'set' in descriptor
         if (!supportsAccessors && (hasGetter || hasSetter)) {
-          throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED)
+          return object
         }
         // If we got that far then getters and setters can be defined !!
         if (hasGetter) {
