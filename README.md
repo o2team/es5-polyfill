@@ -78,12 +78,6 @@ IE中也使用`addEventListener`/`removeEventListener`方法进行事件绑定/�
 
 为IE增加了此API的Polyfill
 
-### requestAnimationFrame/cancelAnimationFrame
-
-[window.requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-
-[window.cancelAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/cancelAnimationFrame)
-
 ### Viewport
 
 获取当前窗口的一些属性已经做了兼容，可以直接使用如下属性来获取
