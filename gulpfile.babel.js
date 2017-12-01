@@ -19,7 +19,24 @@ gulp.task('concat', () => {
     .pipe(semi.add({ leading: true }))
     .pipe(concat('polyfill.js'))
     .pipe(gulp.dest(DIST))
-    .pipe(uglify())
+    .pipe(uglify({
+      beautify: false,
+      mangle: {
+        screw_ie8: false,
+        keep_fnames: true,
+        properties: false,
+        keep_quoted: true
+      },
+      compress: {
+        warnings: false,
+        screw_ie8: false,
+        properties: false
+      },
+      output: {
+        keep_quoted_props: true
+      },
+      comments: false
+    }))
     .pipe(rename({
       basename: 'polyfill.min'
     }))
