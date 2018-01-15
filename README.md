@@ -64,6 +64,8 @@
 
 [Element.matches](https://developer.mozilla.org/en/docs/Web/API/Element/matches)
 
+[Element.textContent](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent)
+
 ## Element.getBoundingClientRect
 
 弥补了IE中`getBoundingClientRect`取不到width/height的缺憾
